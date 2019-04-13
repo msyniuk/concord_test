@@ -1,0 +1,70 @@
+version: '3'
+services:
+    concord-web:
+        image: itworkssoft/php72
+        container_name: concord-web
+        hostname: concord-web
+        depends_on:
+            - concord-mysql
+        links:
+            - concord-mysql
+        external_links:
+            - mailcatcher
+        networks:
+            - default
+            - global_default
+        volumes:
+            - composer-cache-volume:/home/dev/.composer/cache
+            - ./mount/var/log/apache2:/var/log/apache2
+            - ./mount/etc/apache2/sites-enabled:/etc/apache2/sites-enabled
+            - ./..:/var/www/html
+        environment:
+            #PHP_CONFIG_WEB: xdebug.remote_connect_back=1
+            PASSWORD: 112233
+            EXPOSE_HOSTS: |-
+                concord.test
+
+#    concord-front:
+#        build:
+#           context: .
+#        container_name: concord-front
+#        hostname: concord-front
+#        depends_on:
+#            - concord-mysql
+#        links:
+#            - concord-mysql
+#        networks:
+#            - default
+#            - global_default
+#        volumes:
+#            - composer-cache-volume:/home/dev/.composer/cache
+#            - ./mount/var/log/apache2:/var/log/apache2
+#            - ./mount/etc/apache2/sites-enabled:/etc/apache2/sites-enabled
+#            - ./..:/var/www/html
+#        environment:
+#            #PHP_CONFIG_WEB: xdebug.remote_connect_back=1
+#            PASSWORD: 112233
+#            EXPOSE_HOSTS: |-
+#                concord_front.test
+
+    concord-mysql:
+        image: percona:5.7
+        container_name: concord-mysql
+        environment:
+          - MYSQL_ROOT_PASSWORD=root
+          - MYSQL_DATABASE=concord_test_mikhail_syniuk
+          - MYSQL_USER=concord
+          - MYSQL_PASSWORD=concord
+        volumes:
+          - mysql-data:/var/lib/mysql:rw
+          # you may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+          # - ./docker/mysql/data:/var/lib/mysql:rw,delegated
+
+volumes:
+    mysql-data:
+    composer-cache-volume:
+        external: true
+
+networks:
+    global_default:
+        external: true
