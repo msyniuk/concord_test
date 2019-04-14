@@ -15,7 +15,7 @@ class m190413_101002_create_table_groups extends Migration
         $this->createTable('groups', [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull()->unique(),
-        ]);
+        ], 'ENGINE InnoDB');
     }
 
     /**

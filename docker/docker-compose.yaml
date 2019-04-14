@@ -24,11 +24,11 @@ services:
             EXPOSE_HOSTS: |-
                 concord.test
 
-#    concord-front:
+#    concord-backend:
 #        build:
 #           context: .
-#        container_name: concord-front
-#        hostname: concord-front
+#        container_name: concord-backend
+#        hostname: concord-backend
 #        depends_on:
 #            - concord-mysql
 #        links:
@@ -45,7 +45,7 @@ services:
 #            #PHP_CONFIG_WEB: xdebug.remote_connect_back=1
 #            PASSWORD: 112233
 #            EXPOSE_HOSTS: |-
-#                concord_front.test
+#                concord_backend.test
 
     concord-mysql:
         image: percona:5.7

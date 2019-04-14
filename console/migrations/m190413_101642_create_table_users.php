@@ -22,7 +22,7 @@ class m190413_101642_create_table_users extends Migration
             'photo' => $this->string()->notNull(),
             'created_at' => $this->date(),
             'updated_at' => $this->date(),
-        ]);
+        ], 'ENGINE InnoDB');
 
         // creates index for column `group_id`
         $this->createIndex(
