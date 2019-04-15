@@ -13,16 +13,21 @@ class m190413_101642_create_table_users extends Migration
      */
     public function safeUp()
     {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE InnoDB';
+        }
+
         $this->createTable('users', [
             'id' => $this->primaryKey(),
             'login' => $this->string(50)->notNull()->unique(),
-            'password' => $this->string(50)->notNull(),
+            'password' => $this->string()->notNull(),
             'email' => $this->string(50)->notNull(),
             'group_id' => $this->integer(),
-            'photo' => $this->string()->notNull(),
+            'photo' => $this->string(),
             'created_at' => $this->date(),
             'updated_at' => $this->date(),
-        ], 'ENGINE InnoDB');
+        ], $tableOptions);
 
         // creates index for column `group_id`
         $this->createIndex(

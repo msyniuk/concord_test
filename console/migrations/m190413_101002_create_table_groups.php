@@ -12,10 +12,14 @@ class m190413_101002_create_table_groups extends Migration
      */
     public function safeUp()
     {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE InnoDB';
+        }
         $this->createTable('groups', [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull()->unique(),
-        ], 'ENGINE InnoDB');
+        ], $tableOptions);
     }
 
     /**
