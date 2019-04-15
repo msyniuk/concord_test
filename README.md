@@ -17,27 +17,28 @@ INSTALL APP
 
 1. Выполнить команду: **git clone https://github.com/msyniuk/concord_test.git %PROJECT%**
  
-%PROJECT% заменяем на concord_test_mikhail_syniuk
+    `%PROJECT% заменяем на concord_test_mikhail_syniuk`
 
-2. Перейти в папку: concord_test_mikhail_syniuk
+2. Перейти в папку: `concord_test_mikhail_syniuk`
 3. Выполнить команду: **devbox up**
 4. Выполнить команду: **devbox bash**
 5. sudo -iu dev
 6. cd /var/www/html
 7. composer install
 8. php init
-9. php yii migrate
-10. Прописать параметры доступа к БД в файле
+9. Прописать параметры доступа к БД в файле
 
     concord_test_mikhail_syniuk/common/config/main-local.php
 
-    _**'dsn' => 'mysql:host=concord-mysql;dbname=concord_test_mikhail_syniuk',
-    'username' => 'concord',
-    'password' => 'concord',**_
-    
-11. Проект будет доступен в браузере по адресу: **concord.test**
+        'dsn' => 'mysql:host=concord-mysql;dbname=concord_test_mikhail_syniuk',
+        'username' => 'concord',
+        'password' => 'concord',
+        
+10. php yii migrate    
+11. Проект будет доступен в браузере по адресу: 
+    http://concord.test
 12. Данные пользователя: 
-    Логин: admin
+    Логин: admin    
     Пароль: 222222
 
 
