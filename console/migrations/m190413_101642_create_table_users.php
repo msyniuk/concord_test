@@ -22,7 +22,7 @@ class m190413_101642_create_table_users extends Migration
             'id' => $this->primaryKey(),
             'login' => $this->string(50)->notNull()->unique(),
             'password' => $this->string()->notNull(),
-            'email' => $this->string(50)->notNull(),
+            'email' => $this->string(50)->notNull()->unique(),
             'group_id' => $this->integer(),
             'photo' => $this->string(),
             'created_at' => $this->date(),

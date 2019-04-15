@@ -7,6 +7,8 @@ use common\models\UploadForm;
 use Yii;
 use common\models\Users;
 use common\models\UserSerch;
+use yii\filters\AccessControl;
+use yii\helpers\FileHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -23,6 +25,20 @@ class UserController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['signup'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -79,7 +95,8 @@ class UserController extends Controller
 
                 $savedUser = Users::findOne(['id' => $model->id]);
                 $savedUser->updateAttributes(['photo' => $model->id .'.'. $model->imageFile->extension]);
-                $model->imageFile->saveAs( Yii::$app->basePath . '/uploads/users_photo/' . $model->id . '.' . $model->imageFile->extension);
+
+                $model->imageFile->saveAs( $this->getUploadDir('uploads/users_photo') . $model->id . '.' . $model->imageFile->extension);
 
             }
 
@@ -105,6 +122,18 @@ class UserController extends Controller
         $groups = Groups::find()->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $model->save();
+            $model->imageFile = UploadedFile::getInstance($model,'imageFile');
+
+            if($model->imageFile){
+
+                $model->photo = $model->id .'.'. $model->imageFile->extension;
+                $model->save();
+
+                $model->imageFile->saveAs( $this->getUploadDir('uploads/users_photo') . $model->id . '.' . $model->imageFile->extension);
+
+            }
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -144,4 +173,13 @@ class UserController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
+    public function getUploadDir($name)
+    {
+        $path = Yii::$app->basePath . '/' . $name . '/';
+        if (!file_exists($path)) {
+            FileHelper::createDirectory($path, $mode = 0775, $recursive = true);
+        }
+
+        return $path;
+    }
 }

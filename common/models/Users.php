@@ -3,9 +3,12 @@
 namespace common\models;
 
 use Yii;
+use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
+use yii\web\IdentityInterface;
 use yii\web\UploadedFile;
+use yii\web\UserEvent;
 
 /**
  * This is the model class for table "users".
@@ -21,8 +24,9 @@ use yii\web\UploadedFile;
  *
  * @property Groups $group
  */
-class Users extends ActiveRecord
+class Users extends ActiveRecord implements IdentityInterface
 {
+    private $username;
 
     /**
      * @var UploadedFile
@@ -46,9 +50,9 @@ class Users extends ActiveRecord
             [['login', 'password', 'email'], 'required'],
             [['group_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['login', 'password', 'email'], 'string', 'max' => 50],
+            [['login', 'email'], 'string', 'max' => 50],
             [['photo'], 'string', 'max' => 255],
-            [['login'], 'unique'],
+            [['login', 'email'], 'unique'],
             [['group_id'], 'exist', 'skipOnError' => true, 'targetClass' => Groups::className(), 'targetAttribute' => ['group_id' => 'id']],
             [['imageFile'], 'file', 'extensions' => 'png, jpg', 'maxSize' => 1048576],
         ];
@@ -113,12 +117,6 @@ class Users extends ActiveRecord
         return parent::beforeSave($insert);
     }
 
-//    public function afterSave($insert, $changedAttributes)
-//    {
-//        $this->photo = Yii::$app->db->lastInsertID . '.' . $this->imageFile->extension;
-//        parent::afterSave($insert, $changedAttributes);
-//    }
-
 
     public function upload()
     {
@@ -127,5 +125,83 @@ class Users extends ActiveRecord
         } else {
             return false;
         }
+    }
+
+    /**
+     * Generates password hash from password and sets it to the model
+     *
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return bool if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->password);
+    }
+
+    /**
+     * Finds user by login
+     *
+     * @param string $login
+     * @return static|null
+     */
+    public static function findByUsername($login)
+    {
+        return static::findOne(['login' => $login]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function findIdentity($id)
+    {
+        return static::findOne(['id' => $id]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthKey()
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateAuthKey($authKey)
+    {
+
+    }
+
+    public function getUsername()
+    {
+        $this->username = $this->login;
+        return $this->username;
     }
 }

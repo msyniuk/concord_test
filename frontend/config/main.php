@@ -9,6 +9,7 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
+    'defaultRoute' => 'user',
     'homeUrl' => '/',
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
@@ -18,7 +19,7 @@ return [
             'baseUrl' => '',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\models\Users',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
@@ -43,10 +44,10 @@ return [
             'scriptUrl'=>'/index.php',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-                '' => 'site/index',
-                '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
-            ],
+//            'rules' => [
+//                '' => 'user/index',
+//                '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
+//            ],
         ],
 
     ],

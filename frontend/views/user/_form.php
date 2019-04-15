@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'group_id')
         ->dropDownList(\yii\helpers\ArrayHelper::map($groups, 'id', 'name')) ?>
-    <?= $form->field($model, 'imageFile')->fileInput(['accept' => 'image/*']) ?>
+    <?= $form->field($model, 'imageFile')->fileInput(['accept' => 'image/*'])->label('Photo',['class'=>'label-class']) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
