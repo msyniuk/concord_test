@@ -20,7 +20,12 @@ INSTALL APP
     `%PROJECT% заменяем на concord_test_mikhail_syniuk`
 
 2. Перейти в папку: `concord_test_mikhail_syniuk`
-3. Выполнить команду: **devbox up**
+3. Выполнить:
+    `sudo apt-get update \
+    && sudo apt-get install -y python3-pip \
+    && sudo -H pip3 install --upgrade git+https://github.com/gsinkovskiy/devbox.git`
+ 
+   Затем команду: **devbox up**
 4. Выполнить команду: **devbox bash**
 5. sudo -iu dev
 6. cd /var/www/html
